@@ -24,9 +24,10 @@ public class Cliente {
 	@Column(nullable = false, length = 50)
 	private String apellido;
 	
-	@Column(length = 50)
+	@Column(nullable = false, unique = false, length = 50)
 	private String email;
 	
+	@Column(nullable = false)
 	private LocalDateTime createAt;
 	
 	@PrePersist

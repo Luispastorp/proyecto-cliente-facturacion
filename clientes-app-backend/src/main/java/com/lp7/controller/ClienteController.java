@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,42 +31,81 @@ public class ClienteController {
 	IClienteService service;
 	
 	@GetMapping
-	public List<Cliente> listar(){
-		return service.findAll();
+	public ResponseEntity<List<Cliente>> listar(){
+		List<Cliente> response = service.findAll();
+		return new ResponseEntity<List<Cliente>>(response, HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<?> listarporId(@PathVariable("id") Integer id) {
-		Cliente cliente = service.listarPorId(id);
 		
+		Cliente cliente = null;
 		Map<String, Object> response = new HashMap<>(); 
+		try {
+			cliente = service.listarPorId(id);
+		}catch(DataAccessException e){
+			response.put("mensaje", "Error al realizar la consulta en la base de datos");
+			response.put("error", e.getMessage());
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 		if(cliente == null) {
 			response.put("mensaje", "El ID ".concat(id.toString()).concat(" no existe"));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<Cliente>(cliente, HttpStatus.OK);
+		return new ResponseEntity<Cliente>(cliente, HttpStatus.FOUND);
 	}
 	
 	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente registrar(@RequestBody Cliente cliente) {
-		return service.registrar(cliente);
+	public ResponseEntity<?> registrar(@RequestBody Cliente cliente) {
+		Cliente clienteNew = null;
+		Map<String, Object> response = new HashMap<>();
+		try {
+			clienteNew =  service.registrar(cliente);
+		}catch(DataAccessException e){
+			response.put("mensaje", "error al realizar insert cliente en la base de datos");
+			response.put("error", e.getMessage());
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<Cliente>(clienteNew, HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/{id}")
-	public Cliente modificar(@RequestBody Cliente cliente,@PathVariable("id") Integer id) {
+	public ResponseEntity<?> modificar(@RequestBody Cliente cliente,@PathVariable("id") Integer id) {
+		
 		Cliente clienteActual = service.listarPorId(id);
-		clienteActual.setApellido(cliente.getApellido());
-		clienteActual.setNombre(cliente.getNombre());
-		clienteActual.setEmail(cliente.getEmail());
-		return service.modificar(clienteActual);
+		Cliente clienteUpdate = null;
+		Map<String, Object> response = new HashMap<>();
+		if(clienteActual == null) {
+			response.put("mensaje", "El ID ".concat(id.toString()).concat(" no existe"));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+		}
+		try {
+			clienteActual.setApellido(cliente.getApellido());
+			clienteActual.setNombre(cliente.getNombre());
+			clienteActual.setEmail(cliente.getEmail());
+			clienteUpdate = service.modificar(clienteActual);
+		}catch(DataAccessException e){
+			response.put("mensaje", "Error al actualizar cliente en la base de datos");
+			response.put("error", e.getMessage());
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}	
+		return new ResponseEntity<Cliente>(clienteUpdate, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void eliminar(@PathVariable("id") Integer id) {
-		service.eliminar(id);
+	public ResponseEntity<?> eliminar(@PathVariable("id") Integer id) {
+		Map<String, Object> response = new HashMap<>();
+		try {
+			service.eliminar(id);
+		}catch(DataAccessException e){
+			response.put("mensaje", "Error al eliminar cliente en la base de datos");
+			response.put("error", e.getMessage());
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		response.put("mensaje", "Cliente se eliminó con éxito");
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NO_CONTENT);
 	}
 
 }
