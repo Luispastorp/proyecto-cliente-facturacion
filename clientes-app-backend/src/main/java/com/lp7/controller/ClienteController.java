@@ -54,7 +54,7 @@ public class ClienteController {
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<Cliente>(cliente, HttpStatus.FOUND);
+		return new ResponseEntity<Cliente>(cliente, HttpStatus.OK);
 	}
 	
 	@PostMapping
