@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { Cliente } from './cliente';
 import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
-import { catchError} from 'rxjs/operators';
+import { map, catchError} from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { formatDate } from '@angular/common';
 import swal from 'sweetalert2';
 
 @Injectable({
@@ -17,16 +18,28 @@ export class ClienteService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  getClientes(): Observable<Cliente[]>{
+  getClientes(page: number): Observable<any>{
     //return of(clientesJson);
-    return this.http.get<Cliente[]>(this.urlCliente);
+    return this.http.get(this.urlCliente + '/page/' + page).pipe(
+      map((response: any) => {
+        (response.content as Cliente[]).map(cliente =>{
+          cliente.nombre = cliente.nombre.toUpperCase();
+          cliente.createAt = formatDate(cliente.createAt, 'medium', 'en-US');
+          return cliente;
+        });
+        return response;
+      })
+    );
   }
 
   create(cliente: Cliente) : Observable<Cliente>{
     return this.http.post<Cliente>(this.urlCliente, cliente, {headers: this.httpHeaders}).pipe(
       catchError(e => {
+        if(e.status==400){
+          return throwError(e);
+        }
         console.error(e.error.mensaje);
-        swal.fire(e.error.mensaje, e.error.error, 'error');
+        swal.fire(e.error.mensaje, "el email ya existe", 'error');
         return throwError(e);
       })
     );
@@ -37,7 +50,7 @@ export class ClienteService {
       catchError(e => {
         this.router.navigate(['']);
         console.error(e.error.mensaje);
-        swal.fire("Error al editar", e.error.mensaje, 'error');
+        swal.fire("Error al buscar al cliente", e.error.mensaje, 'error');
         return throwError(e);
       })
     );
@@ -46,8 +59,11 @@ export class ClienteService {
   update(cliente: Cliente): Observable<Cliente>{
     return this.http.put<Cliente>(`${this.urlCliente}/${cliente.id}`, cliente, {headers: this.httpHeaders}).pipe(
       catchError( e =>{
+        if(e.status==400){
+          return throwError(e);
+        }
         console.error(e.error.mensaje);
-        swal.fire("Error al actualizar", e.error.mensaje, 'error');
+        swal.fire(e.error.mensaje, "el email ya existe", 'error');
         return throwError(e);
       })
     );

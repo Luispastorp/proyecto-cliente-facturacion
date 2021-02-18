@@ -10,6 +10,7 @@ import { ClienteComponent } from './cliente/cliente.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormComponent } from './cliente/form.component';
 import { FormsModule } from '@angular/forms';
+import { PaginatorComponent } from './paginator/paginator.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { FormsModule } from '@angular/forms';
     FooterComponent,
     DirectivaComponent,
     ClienteComponent,
-    FormComponent
+    FormComponent,
+    PaginatorComponent
   ],
   imports: [
     BrowserModule,
