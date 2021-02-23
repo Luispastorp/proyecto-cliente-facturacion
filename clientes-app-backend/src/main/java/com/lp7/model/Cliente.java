@@ -11,6 +11,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -36,14 +37,25 @@ public class Cliente {
 	@Column(nullable = false, unique = false, length = 50)
 	private String email;
 	
+	@NotNull
 	@Column(nullable = false)
 	private LocalDateTime createAt;
+	
+	private String foto;
 	
 	@PrePersist
 	public void prePersist() {
 		setCreateAt(LocalDateTime.now());
 	}
 	
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
 	public Integer getId() {
 		return id;
 	}

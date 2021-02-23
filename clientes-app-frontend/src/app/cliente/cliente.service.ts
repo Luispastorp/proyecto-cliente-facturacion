@@ -39,7 +39,7 @@ export class ClienteService {
           return throwError(e);
         }
         console.error(e.error.mensaje);
-        swal.fire(e.error.mensaje, "el email ya existe", 'error');
+        swal.fire(e.error.mensaje, "Error en la base de Datos", 'error');
         return throwError(e);
       })
     );
@@ -75,6 +75,19 @@ export class ClienteService {
         console.error(e.error.mensaje);
         swal.fire("Error al eliminar", e.error.mensaje, 'error');
         return throwError(e);
+      })
+    );
+  }
+
+  subirfoto(archivo: File, id): Observable<Cliente>{
+    let formData = new FormData;
+    formData.append("archivo", archivo);
+    formData.append("id", id);
+    return this.http.post(`${this.urlCliente}/upload`, formData).pipe(
+      map((response: any) => response.cliente as Cliente),
+      catchError(e => {
+        swal.fire(e.error.mensaje, "Error al subir las foto en la BD", 'error');
+      return throwError(e);
       })
     );
   }
