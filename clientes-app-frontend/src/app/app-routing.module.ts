@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ClienteComponent } from './cliente/cliente.component';
-import { DetalleComponent } from './cliente/detalle/detalle.component';
 import { FormComponent } from './cliente/form.component';
 import { DirectivaComponent } from './directiva/directiva.component';
+import { LoginComponent } from './usuarios/login.component';
 
 const routes: Routes = [
   {path:'', redirectTo: '/clientes', pathMatch: 'full'},
@@ -12,6 +12,7 @@ const routes: Routes = [
   {path: 'clientes/form', component: FormComponent},
   {path: 'clientes/form/:id', component: FormComponent},
   {path: 'clientes/page/:page', component: ClienteComponent},
+  {path: 'login', component: LoginComponent}
 ];
 
 @NgModule({

@@ -12,6 +12,7 @@ import { FormComponent } from './cliente/form.component';
 import { FormsModule } from '@angular/forms';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { DetalleComponent } from './cliente/detalle/detalle.component';
+import { LoginComponent } from './usuarios/login.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { DetalleComponent } from './cliente/detalle/detalle.component';
     ClienteComponent,
     FormComponent,
     PaginatorComponent,
-    DetalleComponent
+    DetalleComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

@@ -6,6 +6,7 @@ import { map, catchError} from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 import swal from 'sweetalert2';
+import { Region } from './region';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,10 @@ export class ClienteService {
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
 
   constructor(private http: HttpClient, private router: Router) { }
+
+  getRegiones(): Observable<Region[]>{
+    return this.http.get<Region[]>(this.urlCliente + '/regiones');
+  }
 
   getClientes(page: number): Observable<any>{
     //return of(clientesJson);
@@ -63,7 +68,7 @@ export class ClienteService {
           return throwError(e);
         }
         console.error(e.error.mensaje);
-        swal.fire(e.error.mensaje, "el email ya existe", 'error');
+        swal.fire(e.error.mensaje, e.error.mensaje, 'error');
         return throwError(e);
       })
     );

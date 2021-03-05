@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.lp7.model.Cliente;
+import com.lp7.model.Region;
 import com.lp7.service.IClienteService;
 import com.lp7.service.IUploadFileService;
 
@@ -131,6 +132,7 @@ public class ClienteController {
 			clienteActual.setApellido(cliente.getApellido());
 			clienteActual.setNombre(cliente.getNombre());
 			clienteActual.setEmail(cliente.getEmail());
+			clienteActual.setRegion(cliente.getRegion());
 			clienteUpdate = service.modificar(clienteActual);
 		}catch(DataAccessException e){
 			response.put("mensaje", "Error al actualizar cliente en la base de datos");
@@ -193,6 +195,11 @@ public class ClienteController {
 		HttpHeaders cabecera = new HttpHeaders();
 		cabecera.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename =\"" + recurso.getFilename() + "\"");
 		return new ResponseEntity<Resource>(recurso, cabecera, HttpStatus.OK);
+	}
+	
+	@GetMapping("/regiones")
+	public List<Region> listarRegiones(){	
+		return service.findAllRegiones();
 	}
 
 }

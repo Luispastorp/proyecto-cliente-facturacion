@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.lp7.model.Cliente;
+import com.lp7.model.Region;
 
 public interface IClienteService {
 
@@ -15,5 +16,6 @@ public interface IClienteService {
 	Cliente modificar(Cliente cliente);
 	Cliente listarPorId(Integer id);
 	void eliminar(Integer id);
+	public List<Region> findAllRegiones();
 	
 }

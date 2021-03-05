@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.lp7.dao.IClienteDao;
 import com.lp7.model.Cliente;
+import com.lp7.model.Region;
 import com.lp7.service.IClienteService;
 
 @Service
@@ -49,6 +50,11 @@ public class ClienteServiceImpl implements IClienteService{
 	@Override
 	public Page<Cliente> listarPaginacion(Pageable pageable) {
 		return dao.findAll(pageable);
+	}
+
+	@Override
+	public List<Region> findAllRegiones() {
+		return dao.findAllRegiones();
 	}
 
 }
