@@ -6,7 +6,7 @@
     <h5 class="card-title">Listado de Clientes</h5>
 
     <div class="my-2 text-left">
-      <button class="btn btn-roundend btn-primary" type="button" [routerLink] = "['/clientes/form']">Crear Cliente</button>
+      <button *ngIf="authService.hasRole('ROLE_ADMIN')" class="btn btn-roundend btn-primary" type="button" [routerLink] = "['/clientes/form']">Crear Cliente</button>
     </div>
 
     <div *ngIf="clientes?.length==0" class="alert alert-info">
@@ -16,26 +16,26 @@
     <table class="table table-bordered table-striped" *ngIf="clientes?.length>0">
       <thead>
         <tr>
-          <th>id</th>
+          <th *ngIf="authService.hasRole('ROLE_ADMIN')">id</th>
           <th>nombre</th>
           <th>apellido</th>
           <th>email</th>
           <th>fecha</th>
-          <th>editar</th>
-          <th>eliminar</th>
+          <th *ngIf="authService.hasRole('ROLE_ADMIN')">editar</th>
+          <th *ngIf="authService.hasRole('ROLE_ADMIN')">eliminar</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let cliente of clientes">
-          <td><button type="button" (click)="abrirModal(cliente)" class="btn btn-success tbn-sm">{{cliente.id}}</button></td>
+          <td *ngIf="authService.hasRole('ROLE_ADMIN')"><button type="button" (click)="abrirModal(cliente)" class="btn btn-success tbn-sm">{{cliente.id}}</button></td>
           <td>{{cliente.nombre}}</td>
           <td>{{cliente.apellido}}</td>
           <td>{{cliente.email}}</td>
           <td>{{cliente.createAt}}</td>
-          <td>
+          <td *ngIf="authService.hasRole('ROLE_ADMIN')">
             <button  [routerLink] = "['/clientes/form', cliente.id]" name="button" type="button" class="btn btn-primary">editar</button>
           </td>
-          <td>
+          <td *ngIf="authService.hasRole('ROLE_ADMIN')">
             <button name="eliminar" type="button" (click)='delete(cliente)' class="btn btn-danger btn-sm">eliminar</button>
           </td>
         </tr>

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/usuarios/auth.service';
 import swal from 'sweetalert2';
 import { Cliente } from '../cliente';
 import { ClienteService } from '../cliente.service'
@@ -17,6 +18,7 @@ export class DetalleComponent implements OnInit {
 
 
   constructor(private clienteService: ClienteService,
+    public authService: AuthService,
     public modalService: ModalService) { }
 
   ngOnInit(): void {
