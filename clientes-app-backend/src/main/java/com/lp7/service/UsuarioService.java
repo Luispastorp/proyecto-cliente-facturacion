@@ -1,4 +1,4 @@
-package com.lp7.dao;
+package com.lp7.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.lp7.dao.IUsuarioDao;
 import com.lp7.model.Usuario;
 
 @Service

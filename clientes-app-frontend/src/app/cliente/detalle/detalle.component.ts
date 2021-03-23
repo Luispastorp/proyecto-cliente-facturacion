@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Factura } from 'src/app/facturas/models/factura';
+import { FacturaService } from 'src/app/facturas/services/factura.service';
 import { AuthService } from 'src/app/usuarios/auth.service';
 import swal from 'sweetalert2';
 import { Cliente } from '../cliente';
@@ -19,7 +21,8 @@ export class DetalleComponent implements OnInit {
 
   constructor(private clienteService: ClienteService,
     public authService: AuthService,
-    public modalService: ModalService) { }
+    public modalService: ModalService,
+    private facturaService: FacturaService) { }
 
   ngOnInit(): void {
   }
@@ -49,5 +52,31 @@ export class DetalleComponent implements OnInit {
     this.modalService.cerrarModal();
     this.fotoSeleccionada = null;
   }
+
+  delete(factura: Factura): void{
+    swal.fire({
+      title: 'Estas seguro?',
+      text: `seguro que desea eliminar la factura ${factura.ruc}`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, eliminar!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+        this.facturaService.delete(factura.id).subscribe( response =>{
+          this.cliente.facturas = this.cliente.facturas.filter(fact => fact != factura)
+          swal.fire(
+            'Factura Eliminada!',
+            `Factura ${factura.ruc} elimnada con exito.`,
+            'success'
+          )
+        })
+
+      }
+    })
+  }
+
 
 }
